@@ -1,36 +1,42 @@
 version: 2.1
-jobs:
-  build:
+executors:
+  worker:
     docker:
       - image: fr3akyphantom/droid-builder:latest
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
+jobs:
+  build:
+    executor: worker
     environment:
       MANIFEST_BRANCH: 'android-9.0'
-      # PBRP_BRANCH: 'android-9.0'
-      VERSION: '2.9.1'
       VENDOR: 'xiaomi'
       CODENAME: 'olive'
-      BUILD_LUNCH: 'omni_olive-eng'
-      # It's either Official build or Test build
-      PB_OFFICIAL: 'true'
-      # TEST_BUILD: 'true'
-      # EXTRA_CMD: ''
+      FLAVOR: 'eng'
+      TEST_BUILD: 'true'
+      MAINTAINER: '@afiqqo231'
+      CHANGELOG: |
+        - Bringup 3.0
+        - Source side changes
+        - Fully Redesigned UI
+        - New Android like Power Menu (Activated via power key hold)
+        - Flashlight toggled by Vol up(+) on hold
+        - Flashlight toggle on Lockscreen
+        - Etc.
     working_directory: /home/builder/pitchblack
     steps:
       - run:
           name: AIO Build
           command: |
-            echo "Set GitAuth Infos"
-            git config --global user.email $GitHubMail
-            git config --global user.name $GitHubName
-            git config --global color.ui true
             wget -q https://raw.githubusercontent.com/PitchBlackRecoveryProject/vendor_utils/pb/build.sh
             source build.sh
 workflows:
-  version: 2
+  version: 2.1
   build_and_test:
     jobs:
       - build:
-          context: org-global
           filters:
             branches:
-              only: 'master'
+              only: 'android-9.0'
+          context: org-global
