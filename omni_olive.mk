@@ -19,7 +19,7 @@ PRODUCT_RELEASE_NAME := olive
 
 # Inherit from this configs
 $(call inherit-product, build/target/product/embedded.mk)
-$(call inherit-product, vendor/omni/config/common.mk)
+$(call inherit-product, vendor/pb/config/common.mk)
 $(call inherit-product, build/target/product/core_64_bit.mk)
 
 #Treble Support
